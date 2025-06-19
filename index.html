@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Sierra</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(to bottom, #2e003e, #47005c);
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+      padding: 20px;
+    }
+
+    .message {
+      font-size: 1.8rem;
+      max-width: 600px;
+      animation: fadeIn 2s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .fireworks {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #fff;
+      margin-bottom: 10px;
+      z-index: 2;
+    }
+
+    .letter-btn {
+      margin-top: 20px;
+      background-color: #800080;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      z-index: 2;
+    }
+
+    .letter {
+      margin-top: 20px;
+      max-width: 600px;
+      font-size: 1.2rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #fff;
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
+      z-index: 2;
+    }
+
+    .skull-bunny {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: url('https://i.imgur.com/NxJKCDz.png') no-repeat center center/contain;
+      top: 10px;
+      right: 10px;
+      opacity: 0.2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="skull-bunny"></div>
+    <div id="text1" class="message">Honestly, I don’t even know what I’m doing. I only took like one coding class… but I wanted to do something since you always seem so distant.</div>
+    <div id="text2" class="message hidden">Honestly, I’ve decided you’re worth the hassle. So I’m going to put up with you… even if you keep me waiting forever.</div>
+    <canvas class="fireworks hidden" id="fireworks"></canvas>
+    <h1 class="hidden" id="birthdayTitle">Happy Birthday Sierra 🎉</h1>
+    <button class="letter-btn hidden" id="openLetter">Open Your Letter</button>
+    <div class="letter hidden" id="letter">
+      <p>Honestly, I haven’t known you all that long, and the way we met is pretty wild.</p>
+      <p>But you’re weird — not in a bad way — but you’ve always got me guessing, or waiting… tsk, even though I should probably fight you on that.</p>
+      <p>I just want you to be able to enjoy your day without any stress.</p>
+      <p>Truth is, I have no idea what I’m doing here, but I wanted to do something for you — even if it’s just this once.</p>
+      <p>I hope you feel seen, valued, and never have to doubt that someone’s out here silently rooting for you.</p>
+      <p>So hey…</p>
+      <p><strong>Happy Birthday, you big cry baby.</strong></p>
+      <p>Make the most of your day — you deserve it.</p>
+    </div>
+  </div>
+
+  <script>
+    const text1 = document.getElementById('text1');
+    const text2 = document.getElementById('text2');
+    const fireworks = document.getElementById('fireworks');
+    const title = document.getElementById('birthdayTitle');
+    const button = document.getElementById('openLetter');
+    const letter = document.getElementById('letter');
+
+    setTimeout(() => {
+      text1.classList.add('hidden');
+      text2.classList.remove('hidden');
+      text2.style.animation = 'fadeIn 2s ease forwards';
+    }, 4500);
+
+    setTimeout(() => {
+      fireworks.classList.remove('hidden');
+      title.classList.remove('hidden');
+      button.classList.remove('hidden');
+      startFireworks();
+    }, 9000);
+
+    button.addEventListener('click', () => {
+      letter.classList.remove('hidden');
+    });
+
+    function startFireworks() {
+      const canvas = fireworks;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+
+      function Particle(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.radius = 2;
+        this.color = color;
+        this.speed = Math.random() * 5 + 2;
+        this.angle = Math.random() * 2 * Math.PI;
+        this.life = 60;
+
+        this.update = function () {
+          this.life--;
+          this.x += Math.cos(this.angle) * this.speed;
+          this.y += Math.sin(this.angle) * this.speed;
+        };
+
+        this.draw = function () {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        };
+      }
+
+      function explode(x, y) {
+        const colors = ['#ff69b4', '#dda0dd', '#ffffff', '#9932cc'];
+        for (let i = 0; i < 50; i++) {
+          particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          particles[i].update();
+          particles[i].draw();
+          if (particles[i].life <= 0) particles.splice(i, 1);
+        }
+        requestAnimationFrame(animate);
+      }
+
+      setInterval(() => {
+        explode(Math.random() * canvas.width, Math.random() * canvas.height);
+      }, 500);
+
+      animate();
+    }
+  </script>
+</body>
+</html>
